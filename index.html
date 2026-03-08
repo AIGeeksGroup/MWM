@@ -1,0 +1,457 @@
+<!doctype html>
+<html>
+<head>
+<title>MWM: Mobile World Models for Action-Conditioned Consistent Prediction</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"> -->
+<link href="bootstrap.min.css" rel="stylesheet">
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script> -->
+<!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet"> -->
+<link href="opensans.css" rel="stylesheet">
+<!-- <link rel="icon" href="images/logo3.png"> -->
+<link href="style.css" rel="stylesheet">
+<style>
+  .container_2{
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+.video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+  .collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+
+  .active, .collapsible:hover {
+    background-color: #555;
+  }
+  
+  .content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+  }
+</style>
+
+<style>
+.paperthumb {
+  float:left; width: 120px; margin: 3px 10px 7px 0;
+}
+.paperdesc {
+  clear: both;
+}
+
+.header-link-btn {
+  display: inline-block;
+  padding: 9px 18px;
+  margin-right: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background-color: #ffffff;
+  color: #743481 !important;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none !important;
+  transition: color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.header-link-btn:hover,
+.header-link-btn:focus {
+  color: rgba(31, 41, 55, 0.82) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+  text-decoration: none !important;
+  transform: translateY(-1px);
+}
+
+.real-world-eval {
+  margin: 14px 0 24px;
+}
+
+.real-world-header,
+.real-world-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.real-world-header {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.real-world-video {
+  background: #f8f8f8;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.real-world-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.real-world-video-frame {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000000;
+}
+
+.real-world-video-frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.real-world-cell-title {
+  display: none;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.real-world-desc {
+  margin: 8px 0 18px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.real-world-error {
+  margin: 12px 0;
+  color: #a94442;
+  font-size: 14px;
+}
+
+.benchmark-eval {
+  margin: 14px 0 24px;
+}
+
+.benchmark-header,
+.benchmark-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.benchmark-header {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.benchmark-cell-title {
+  display: none;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .real-world-header {
+    display: none;
+  }
+
+  .real-world-row {
+    grid-template-columns: 1fr;
+  }
+
+  .real-world-video {
+    padding: 6px;
+  }
+
+  .real-world-cell-title {
+    display: block;
+  }
+
+  .benchmark-header {
+    display: none;
+  }
+
+  .benchmark-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .benchmark-cell-title {
+    display: block;
+  }
+}
+</style>
+<style>
+  .flex-container {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: flex-start;
+  }
+  .flex-container p {
+    margin-left: 20px;
+  }
+</style>
+</head>
+
+<body class="nd-docs">
+<div class="nd-pageheader">
+ <div class="container">
+ <p class="lead" style="font-size:30px">
+    <strong><span style="font-weight:900; letter-spacing:0.4px;">MWM:</span> Mobile World Models for Action-Conditioned Consistent Prediction</strong>
+  </p>
+   <!-- <p class="lead" style="font-size:25px"><strong>Coference 2026</strong></p> -->
+
+  <br>
+    <address style="font-size: 110%;">
+    <nobr style="margin-right:18px;"><a href="#"><b>Han Yan</b></a><sup>∗</sup></nobr>
+    <nobr style="margin-right:18px;"><a href="#"><b>Zishang Xiang</b></a><sup>∗</sup></nobr>
+    <nobr style="margin-right:18px;"><a href="https://steve-zeyu-zhang.github.io/"><b>Zeyu Zhang</b></a><sup>∗†</sup></nobr>
+    <nobr style="margin-right:18px;"><a href="https://ha0tang.github.io/"><b>Hao Tang</b></a><sup>‡</sup></nobr>
+  <br>
+      <nobr style="font-size:95%;">School of Computer Science, Peking University</nobr>
+  <br>
+  <small>*Equal contributions. <sup>†</sup>Project Leader.</small>
+  </address>
+  <address style="font-size: 120%;">
+	 <!-- <br> -->
+	  <a class="header-link-btn" href="https://arxiv.org/abs/">Paper</a>
+	  <a class="header-link-btn" href="https://github.com/AIGeeksGroup/MWM">Code</a>
+	  <a class="header-link-btn" href="https://huggingface.co/AIGeeksGroup/MWM">Model</a>
+  </address>
+ </div>
+ </p>
+ </div>
+</div> <!-- end nd-pageheader -->
+
+<div class="container">
+
+
+<!-- <p align="center">
+  <video width="90%" controls>
+    <source src="vid/final_demo.mp4" type="video/mp4">
+  </video>
+</p> -->
+
+<h2>Real World Results</h2><hr>
+
+<div class="real-world-eval">
+  <div class="real-world-header">
+    <div>Exo View</div>
+    <div>Ego View</div>
+    <div>Prediction</div>
+  </div>
+  <div id="real-world-grid"></div>
+</div>
+
+
+<h2>Benchmark Results</h2><hr>
+<div class="benchmark-eval">
+  <div class="benchmark-header">
+    <div>Prediction</div>
+    <div>GT</div>
+    <div>Prediction</div>
+    <div>GT</div>
+  </div>
+  <div class="benchmark-row">
+    <div class="real-world-video">
+      <div class="benchmark-cell-title">Prediction</div>
+      <div class="real-world-video-frame">
+        <video autoplay muted loop playsinline controls preload="metadata">
+          <source src="videos/benchmark/pred_68.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="real-world-video">
+      <div class="benchmark-cell-title">GT</div>
+      <div class="real-world-video-frame">
+        <video autoplay muted loop playsinline controls preload="metadata">
+          <source src="videos/benchmark/gt_68.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="real-world-video">
+      <div class="benchmark-cell-title">Prediction</div>
+      <div class="real-world-video-frame">
+        <video autoplay muted loop playsinline controls preload="metadata">
+          <source src="videos/benchmark/pred_71.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="real-world-video">
+      <div class="benchmark-cell-title">GT</div>
+      <div class="real-world-video-frame">
+        <video autoplay muted loop playsinline controls preload="metadata">
+          <source src="videos/benchmark/gt_71.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<h2>Methods</h2><hr>
+<p align="center">
+     <img src="img/main.png" width="90%">
+</p>
+
+<p> 
+  <b>Overview of the Two-stage training pipeline for MWM.</b> Our training paradigm first performs structure pretraining to learn fine-grained geometry and illumination-dependent appearance, then applies ACC post-training to mitigate compounding error while freezing the CDiT backbone and updating only AdaLN. Within post-training, we introduce ICSD to enable distillation that preserves the consistency objective, while aligning truncated training-time estimates with the inference-time endpoint.
+<p>
+
+
+<h2>Robot Setup</h2><hr>
+<p align="center">
+     <img src="img/robot_setup_page-0001.jpg" width="90%">
+</p>
+
+<p> 
+  Real-world deployment setup on the AIRBOT Mobile Manipulation Kit 2 (MMK2). (a) Hardware platform. (b) Deployment process.
+<p>
+
+
+<p>
+<div class="card">
+<h3 class="card-header">Bibtex</h3>
+<div class="card-block">
+<pre class="card-text clickselect">
+@article{huang2025mobilevla,
+  title={MobileVLA-R1: Reinforcing Vision-Language-Action for Mobile Robots},
+  author={Huang, Ting and Li, Dongjian and Yang, Rui and Zhang, Zeyu and Yang, Zida and Tang, Hao},
+  journal={arXiv preprint arXiv:2511.17889},
+  year={2025}
+}
+</pre>
+</div>
+</div>
+</p>
+
+
+</div>
+</div> <!-- row -->
+
+</div> <!-- container -->
+
+<script>
+  (function () {
+    var grid = document.getElementById("real-world-grid");
+    if (!grid) {
+      return;
+    }
+
+    function buildVideoCell(title, src) {
+      var cell = document.createElement("div");
+      cell.className = "real-world-video";
+
+      var cellTitle = document.createElement("div");
+      cellTitle.className = "real-world-cell-title";
+      cellTitle.textContent = title;
+      cell.appendChild(cellTitle);
+
+      var video = document.createElement("video");
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.controls = true;
+      video.preload = "metadata";
+      video.setAttribute("playsinline", "");
+
+      var source = document.createElement("source");
+      source.src = src;
+      source.type = "video/mp4";
+      video.appendChild(source);
+
+      var frame = document.createElement("div");
+      frame.className = "real-world-video-frame";
+      frame.appendChild(video);
+      cell.appendChild(frame);
+      return cell;
+    }
+
+    function appendRow(caseId, description) {
+      var row = document.createElement("div");
+      row.className = "real-world-row";
+      row.appendChild(buildVideoCell("Exo View", "videos/real_videos/exo/" + caseId + ".mp4"));
+      row.appendChild(buildVideoCell("Ego View", "videos/real_videos/ego/" + caseId + ".mp4"));
+      row.appendChild(buildVideoCell("Prediction", "videos/real_videos/pred/" + caseId + ".mp4"));
+      grid.appendChild(row);
+
+      var desc = document.createElement("p");
+      desc.className = "real-world-desc";
+      var descTitle = document.createElement("strong");
+      descTitle.textContent = caseId + ":";
+      desc.appendChild(descTitle);
+      desc.appendChild(document.createTextNode(" " + description));
+      grid.appendChild(desc);
+    }
+
+    var realWorldRows = [
+      { id: "0210_0857_0", description: "The goal is set to the cabinet, and the final navigation error is 2.1 m." },
+      { id: "0210_0857_1", description: "The goal is set to the cabinet, and the final navigation error is 3.3 m." },
+      { id: "0210_0857_2", description: "The goal is set to the cabinet, and the final navigation error is 0.8 m." },
+      { id: "0210_0857_3", description: "The goal is set to the cabinet, and the final navigation error is 4.3 m." },
+      { id: "0210_0857_4", description: "The goal is set to the cabinet, and the final navigation error is 2 m." },
+      { id: "0210_0857_6", description: "The goal is set to the cabinet, and the final navigation error is 2.2 m." },
+      { id: "0210_0857_7", description: "The goal is set to the window, and the final navigation error is 0.7 m." },
+      { id: "0210_0857_8", description: "The goal is set to the window, and the final navigation error is 1.9 m." },
+      { id: "0210_0857_9", description: "The goal is set to the window, and the final navigation error is 0.1 m." },
+      { id: "0210_0857_10", description: "The goal is set to the window, and the final navigation error is 3.6 m." },
+      { id: "0210_0857_11", description: "The goal is set to the window, and the final navigation error is 0.8 m." },
+      { id: "0210_0857_13", description: "The goal is set to the window, and the final navigation error is 3.5 m." },
+      { id: "0210_0857_15", description: "The goal is set to the window, and the final navigation error is 3 m." },
+      { id: "0210_0857_16", description: "The goal is set to the corridor, and the final navigation error is 0.8 m." },
+      { id: "0210_0857_17", description: "The goal is set to the corridor, and the final navigation error is 1.6 m." },
+      { id: "0210_0857_18", description: "The goal is set to the corridor, and the final navigation error is 1.8 m." },
+      { id: "0210_0857_19", description: "The goal is set to the pillar, and the final navigation error is 3 m." },
+      { id: "0210_0857_21", description: "The goal is set to the pillar, and the final navigation error is 3.3 m." },
+      { id: "0210_0857_22", description: "The goal is set to the pillar, and the final navigation error is 3.4 m." },
+      { id: "0209_1614_1", description: "The goal is set to the cabinet, and the final navigation error is 0.9 m." }
+    ];
+
+    realWorldRows.forEach(function (row) {
+      appendRow(row.id, row.description);
+    });
+  })();
+</script>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+  
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.maxHeight){
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight * 50+ "px";
+      } 
+      content.style.height = "550%";
+    });
+  }
+</script>
+
+</body>
+</html>
