@@ -78,12 +78,12 @@ bash finetune_in_envs.sh
 ```
 
 ### Evaluation
-Evaluate ACC and Generation Quality in SCAND
+Evaluate ACC and generation quality in SCAND
 ```bash
 bash single_frame_evaluation.sh
 ```
 
-Evaluate Navigation Performance in SCAND
+Evaluate navigation performance in SCAND
 ```bash
 bash trajectory_evaluation.sh
 ```
@@ -99,8 +99,7 @@ Start the Inference Service
 bash start_nwm_infer_service.sh
 ```
 
-#### Client 
-The client connects to both the MMK2 robot and the inference server
+#### Data collect in realworld 
 ```bash
 cd policies/nwm/real
 ```
@@ -115,9 +114,18 @@ Data Processing
 python process_episodes.py
 ```
 
-Start the Client
-```bash
+#### Client 
+The client connects to both the MMK2 robot and the inference server, and is currently supported only on Windows.
+
+First, enable port forwarding:
+```
 ssh -p <SSH_PORT> -L 8000:127.0.0.1:8000 <USERNAME>@<SERVER_HOST>
+```
+
+Then, run the client in Windows PowerShell:
+```
+cd realworld_deploy/policies/nwm/real
+powershell -ExecutionPolicy Bypass -File .\run_client.ps1
 ```
 ---
 
