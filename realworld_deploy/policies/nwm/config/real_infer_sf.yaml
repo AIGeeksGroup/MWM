@@ -1,0 +1,20 @@
+model:
+  dataset_name: real_beike
+  config_path: config/nwm_cdit_xl.yaml
+  checkpoint: "0126000"
+  diffusion_infer_mode: ddim5
+  lora_dir: /root/autodl-tmp/embodiedAI/nwm/logs/mwm_real_sf_posttrain/checkpoints/lora_127100
+
+planning:
+  num_samples: 120
+  rollout_stride: 1
+  topk: 5
+  opt_steps: 3
+  num_repeat_eval: 1
+
+observation:
+  context_size: 4
+
+
+
+

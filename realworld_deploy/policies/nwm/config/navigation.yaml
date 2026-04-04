@@ -1,0 +1,104 @@
+# env
+task_path: discoverse/examples/tasks_mmk2/navigation.py
+task_name: navigation
+abs_action: false
+mode: eval
+max_episode_steps: 1
+obs_keys: ['image0', 'image1', 'image2']
+shape_meta:
+  obs:
+    jq:
+      shape:
+      - 7
+      type: low_dim
+    image0:
+      shape:
+      - 3
+      - 240
+      - 320
+      type: rgb
+    image1:
+      shape:
+      - 3
+      - 240
+      - 320
+      type: rgb
+action_dim: 7
+obs_steps: 4
+action_steps: 8
+# obs_encoder
+rgb_model: resnet18
+resize_shape: null
+crop_shape: null
+random_crop: false
+use_group_norm: true
+use_seq: true
+# train
+device: cuda:0
+seed: 4
+gradient_steps: 200000
+batch_size: 16
+horizon: 10
+nn: dit
+diffusion: ddpm
+sample_steps: 5
+# optimizer
+lr: 0.0001
+# eval
+model_path: path/to/model
+eval_episodes: 60
+eval_freq: 10000
+save_video: true
+# log
+exp_name: abs_${abs_action}_${nn}_${diffusion}_sample_${sample_steps}_horizon_${horizon}
+save_path: logs
+project: Diffuser
+group: dp_pusht
+wandb_mode: offline
+log_freq: 10000
+save_freq: 10000
+work_dir: ${save_path}/${task_name}/${mode}/${exp_name}_${now:%Y%m%d_%H%M%S}
+# hydra
+hydra:
+  run:
+    dir: ${work_dir}
+  job:
+    chdir: false
+
+# WM eval args
+wm_eval:
+  exp: config/nwm_cdit_xl.yaml
+  ckp: cdit_xl_ego4d_200000
+  #ckp: cdit_s_100000
+  save_preds: store_true
+  num_workers: 8
+  batch_size: 16
+  metric_waypoint_spacing: 0.255 # average spacing between waypoints (meters)
+datasets: lixiang_3dgs_traj
+diffusion_infer_mode: "ddim5"
+
+# Planning Specific Args
+num_samples: 60     # num nomad samples to predict
+rollout_stride: 1
+topk: 5             # top k samples to take mean and var for CEM
+opt_steps: 1       # num iterations for CEM
+num_repeat_eval: 1  # number of evals for one action
+plot: store_true
+
+# 每次探测后的旋转角度
+detect_turn_degree: -45
+
+# 目标和初始位置设置
+random_goalimg: True
+#spec_position: [1.5979591,  -3.26698051,  0.0]
+#spec_orientation: [0.8660254037844387, 0.0, 0.0, -0.4999999999999998]
+
+random_origin: True
+#origin_position: [-0.93030416, -0.07660444, 0.0]
+#origin_orientation: [0.9659258262890684, 0.0, 0.0, -0.2588190451025207]
+
+#lora_dir: logs/nwm_cdit_xl/lora/                  # pure_lora
+lora_dir: logs/nwm_cdit_xl/lora_201800/           # self-forcing
+#lora_dir: null                                     # baseline
+
+

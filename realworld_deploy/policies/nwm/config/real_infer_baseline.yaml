@@ -1,0 +1,20 @@
+model:
+  dataset_name: real_beike
+  config_path: config/nwm_cdit_xl.yaml
+  checkpoint: "0126000"
+  lora_dir: null
+  diffusion_infer_mode: ddim25
+
+planning:
+  num_samples: 120
+  rollout_stride: 1
+  topk: 5
+  opt_steps: 3
+  num_repeat_eval: 1
+
+observation:
+  context_size: 4
+
+
+
+
