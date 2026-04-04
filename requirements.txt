@@ -1,0 +1,17 @@
+--index-url https://download.pytorch.org/whl/nightly/cu126
+
+torch
+torchvision
+torchaudio
+decord
+einops
+evo
+transformers
+diffusers
+tqdm
+timm
+notebook
+dreamsim
+torcheval
+lpips
+ipywidgets
