@@ -16,7 +16,7 @@ torchrun \
     --ckpt-every 500 \
     --eval-every 1000 \
     --bfloat16 0 \
-    --epochs 595  \
+    --epochs 600  \
     --torch-compile 0 \
     --log-every 10
 

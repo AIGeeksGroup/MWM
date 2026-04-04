@@ -2,7 +2,7 @@ source /etc/network_turbo
 RESULTS_FOLDER=./single_frame_evaluation_output
 
 mode='mwm_real_sf_posttrain_adaLN'
-datasets=real_beike
+datasets=scand
 
 if [[ "$mode" == "baseline" ]]; then
   echo "Running in MODE=baseline"
