@@ -1,7 +1,7 @@
 source /etc/network_turbo
 RESULTS_FOLDER=./single_frame_evaluation_output
 
-mode='mwm_real_sf_posttrain_adaLN'
+mode='mwm'
 datasets=scand
 
 if [[ "$mode" == "baseline" ]]; then
@@ -58,7 +58,7 @@ fi
 python isolated_nwm_infer.py \
     --exp config/${exp}.yaml \
     --datasets ${datasets} \
-    --batch_size 40 \
+    --batch_size 96 \
     --num_workers 12 \
     --eval_type ${eval_type} \
     --output_dir ${RESULTS_FOLDER} \
@@ -70,7 +70,7 @@ python isolated_nwm_infer.py \
     --ckp ${ckp} \
     --datasets ${datasets} \
     --diffusion_steps ${diffusion_steps} \
-    --batch_size 30 \
+    --batch_size 1 \
     --num_workers 12 \
     --eval_type ${eval_type} \
     --output_dir ${RESULTS_FOLDER} \
@@ -81,5 +81,4 @@ python isolated_nwm_eval.py \
     --datasets ${datasets} \
     --gt_dir ${RESULTS_FOLDER}/gt \
     --exp_dir ${RESULTS_FOLDER}/${exp}_${ckp} \
-    --eval_types ${eval_type} \
-    --batch_size 2 
+    --eval_types ${eval_type}
