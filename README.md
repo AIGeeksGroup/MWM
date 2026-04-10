@@ -51,7 +51,7 @@ efficiency.
 
 - [x] Upload our paper to arXiv and build project pages.
 - [x] Upload the code.
-- [ ] Upload the model.
+- [x] Upload the model.
 
 
 ## ⚡ Quick Start
@@ -76,6 +76,10 @@ Two-stage training (Structure Pretraining + Action-Conditioned Consistency (ACC)
 cd mwm
 bash finetune_in_envs.sh
 ```
+
+### Models
+The LoRA adapter fine-tuned with ACC post-training on the SCAND dataset has been uploaded to [Hugging Face](https://huggingface.co/AIGeeksGroup/MWM). It is based on [NWM](https://huggingface.co/facebook/nwm) cdit_xl_100000.
+
 
 ### Evaluation
 Evaluate ACC and generation quality in SCAND
